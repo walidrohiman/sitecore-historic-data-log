@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
 using Hangfire;
 using SitecoreExtension.HistoricDataLog.Model;
 using Newtonsoft.Json;
+using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -32,7 +34,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                 return;
             }
 
-            if (!item.Paths.FullPath.Contains("/sitecore/content/"))
+            if (!GetConfiguredPath(item.Paths.FullPath)) //check if current item is configured for saving logs
             {
                 return;
             }
@@ -62,6 +64,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
             var itemInfo = new ItemInformation
             {
                 ItemId = item.ID.ToString(),
+                ItemPath = item.Paths.FullPath,
                 ItemLanguage = item.Language.ToString(),
                 ItemVersion = item.Version.Number.ToString(),
                 UserName = item.Fields["__Updated by"].Value
@@ -79,6 +82,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
             {
                 var id = Guid.NewGuid().ToString();
                 var itemId = itemInfo.ItemId;
+                var itemPath = itemInfo.ItemPath;
                 var itemLanguage = itemInfo.ItemLanguage;
                 var itemVersion = itemInfo.ItemVersion;
                 var userName = itemInfo.UserName;
@@ -86,10 +90,11 @@ namespace SitecoreExtension.HistoricDataLog.Events
 
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Experience"].ConnectionString))
                 {
-                    var insertQuery = $@"INSERT INTO ChangesEntry
+                    var insertQuery = $@"INSERT INTO ItemHistory
                                             (
                                              Id,
                                              ItemId,
+                                             ItemPath,
                                              ItemLanguage,
                                              ItemVersion,
                                              FieldsInformation,
@@ -100,6 +105,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                                             (
                                              '{id}',
                                              '{itemId}',
+                                             '{itemPath}',
                                              '{itemLanguage}',
                                              '{itemVersion}',
                                              '{fieldsInfo}',
@@ -114,6 +120,26 @@ namespace SitecoreExtension.HistoricDataLog.Events
             {
                 Log.Error("Error in Creating Changes Entry", ex.Message);
             }
+        }
+
+        private bool GetConfiguredPath(string path)
+        {
+            var database = Factory.GetDatabase("master");
+            var watchlistItems = database.GetItem("/sitecore/system/Modules/Historic Data Log/Watchlists").Children;
+
+            if (!watchlistItems.Any()) return false;
+
+            foreach (Item watchlist in watchlistItems)
+            {
+                var configuredPath = watchlist.Fields["Watchlist Path"].Value;
+
+                if (path.Contains(configuredPath))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
