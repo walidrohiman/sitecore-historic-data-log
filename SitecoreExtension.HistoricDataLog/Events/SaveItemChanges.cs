@@ -66,6 +66,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                 ItemId = item.ID.ToString(),
                 ItemPath = item.Paths.FullPath,
                 ItemLanguage = item.Language.ToString(),
+                ItemName = item.Name,
                 ItemVersion = item.Version.Number.ToString(),
                 UserName = item.Fields["__Updated by"].Value
             };
@@ -83,6 +84,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                 var id = Guid.NewGuid().ToString();
                 var itemId = itemInfo.ItemId;
                 var itemPath = itemInfo.ItemPath;
+                var itemName = itemInfo.ItemName;
                 var itemLanguage = itemInfo.ItemLanguage;
                 var itemVersion = itemInfo.ItemVersion;
                 var userName = itemInfo.UserName;
@@ -95,6 +97,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                                              Id,
                                              ItemId,
                                              ItemPath,
+                                             ItemName,
                                              ItemLanguage,
                                              ItemVersion,
                                              FieldsInformation,
@@ -106,6 +109,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                                              '{id}',
                                              '{itemId}',
                                              '{itemPath}',
+                                             '{itemName}',
                                              '{itemLanguage}',
                                              '{itemVersion}',
                                              '{fieldsInfo}',
@@ -133,9 +137,21 @@ namespace SitecoreExtension.HistoricDataLog.Events
             {
                 var configuredPath = watchlist.Fields["Watchlist Path"].Value;
 
-                if (path.Contains(configuredPath))
+                var includeSubItems = watchlist.Fields["Include subitems"].Value;
+
+                if (includeSubItems == "1")
                 {
-                    return true;
+                    if (path.Contains(configuredPath))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (path.Equals(configuredPath))
+                    {
+                        return true;
+                    }
                 }
             }
 
