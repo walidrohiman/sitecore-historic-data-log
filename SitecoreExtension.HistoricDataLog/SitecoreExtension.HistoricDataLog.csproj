@@ -614,13 +614,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Batch\DeletionBatch.cs" />
-    <Compile Include="Commands\ConfigureDeleteBatchCommand.cs" />
+    <Compile Include="Commands\ConfigureDeleteJobCommand.cs" />
     <Compile Include="Commands\AddWatchlistCommand.cs" />
     <Compile Include="Commands\DeleteHistoricLogEntryCommand.cs" />
     <Compile Include="Commands\ConfigureWatchlistCommand.cs" />
     <Compile Include="Control\HistoricLogPage.cs" />
     <Compile Include="Dialogs\ConfigureWatchlistDialog.cs" />
-    <Compile Include="Dialogs\ConfigureDeleteBatchDialog.cs" />
+    <Compile Include="Dialogs\ConfigureDeleteJobDialog.cs" />
     <Compile Include="Dialogs\AddWatchlistDialog.cs" />
     <Compile Include="Events\SaveItemChanges.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationDashboard.cs" />

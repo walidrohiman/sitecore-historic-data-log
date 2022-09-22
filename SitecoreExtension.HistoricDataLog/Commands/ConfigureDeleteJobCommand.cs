@@ -8,7 +8,7 @@ using Sitecore.Web.UI.XamlSharp.Continuations;
 
 namespace SitecoreExtension.HistoricDataLog.Commands
 {
-    public class ConfigureDeleteBatchCommand : Command, ISupportsContinuation
+    public class ConfigureDeleteJobCommand : Command, ISupportsContinuation
     {
         public override void Execute(CommandContext context)
         {
@@ -26,7 +26,7 @@ namespace SitecoreExtension.HistoricDataLog.Commands
                 return;
             }
 
-            var urlString = new UrlString(UIUtil.GetUri("control:ConfigureDeleteBatch"));
+            var urlString = new UrlString(UIUtil.GetUri("control:ConfigureDeleteJob"));
             SheerResponse.ShowModalDialog(urlString.ToString(), "1200px", "700px", string.Empty, true);
             args.WaitForPostBack();
         }

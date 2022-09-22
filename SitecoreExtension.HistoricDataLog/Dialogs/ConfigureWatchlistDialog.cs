@@ -10,6 +10,7 @@ using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
+using Sitecore.Web.UI.Sheer;
 using Border = Sitecore.Web.UI.HtmlControls.Border;
 
 namespace SitecoreExtension.HistoricDataLog.Dialogs
@@ -34,6 +35,9 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
                 if (eventType.ToLower() == "click" && (source.ToLower() != "ok" && source.ToLower() != "cancel"))
                 {
                     this.OnDelete(e, source);
+                    
+                    SheerResponse.Refresh(Watchlists);
+                    RenderWatchlist();
                 }
 
                 return;
@@ -44,8 +48,6 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
 
         protected void RenderWatchlist()
         {
-            this.Watchlists.Controls.Clear();
-
             var stringBuilder1 = new StringBuilder("<table class='scListControl scVersionsTable'>");
             stringBuilder1.Append("<tr>");
          
@@ -95,8 +97,6 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
             {
                 item.Recycle();
             }
-            
-            this.RenderWatchlist();
         }
     }
 }

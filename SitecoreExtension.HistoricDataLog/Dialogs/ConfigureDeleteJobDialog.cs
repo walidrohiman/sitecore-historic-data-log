@@ -4,16 +4,17 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Sitecore;
 using Sitecore.Configuration;
-using Sitecore.Data;
 using Sitecore.Diagnostics;
+using Sitecore.Mvc.Extensions;
 using Sitecore.SecurityModel;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
+using SitecoreExtension.HistoricDataLog.Batch;
 using Border = Sitecore.Web.UI.HtmlControls.Border;
 
 namespace SitecoreExtension.HistoricDataLog.Dialogs
 {
-    public class ConfigureDeleteBatchDialog : DialogForm
+    public class ConfigureDeleteJobDialog : DialogForm
     {
         protected Border DeleteBorder;
 
@@ -22,29 +23,18 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
             Assert.ArgumentNotNull((object)e, nameof(e));
             base.OnLoad(e);
 
-            var source = Context.ClientPage.ClientRequest.Source;
-            var eventType = Context.ClientPage.ClientRequest.EventType;
-
             if (Context.ClientPage.IsEvent)
-            {
-                if (eventType.ToLower() == "click" && (source.ToLower() != "ok" && source.ToLower() != "cancel"))
-                {
-                    this.OnSave(e, source);
-                }
-
                 return;
-            }
-       
+
             this.RenderDeleteConfig();
         }
 
         protected void RenderDeleteConfig()
         {
-            this.DeleteBorder.Controls.Clear();
-
             var itemId = string.Empty;
             var numberOfDays = string.Empty;
-            var cronExpression = string.Empty;
+            var currentDay = string.Empty;
+            var currentFrequency = string.Empty;
 
             var stringBuilder1 = new StringBuilder("<table class='scListControl scVersionsTable'>");
             stringBuilder1.Append("<tr>");
@@ -53,16 +43,16 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
             stringBuilder1.Append("</tr>");
             DeleteBorder.Controls.Add(new LiteralControl(stringBuilder1.ToString()));
 
-            //add watchlist items
             var database = Factory.GetDatabase("master");
 
-            var configuredItem = database.GetItem("/sitecore/system/Modules/Historic Data Log/Delete History");
+            var configuredItem = database.GetItem("/sitecore/system/Modules/Historic Data Log/Delete Config/Delete History");
 
             if (configuredItem != null)
             {
                 itemId = configuredItem.ID.ToString();
                 numberOfDays = configuredItem.Fields["Number of days"].Value;
-                cronExpression = configuredItem.Fields["Cron Expression"].Value;
+                currentDay = configuredItem.Fields["Day"].Value;
+                currentFrequency = configuredItem.Fields["Frequency"].Value;
             }
 
             var stringBuilder2 = new StringBuilder();
@@ -79,48 +69,69 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
             DeleteBorder.Controls.Add(text1);
             DeleteBorder.Controls.Add(new LiteralControl("</td></tr>"));
 
+
+            //Cron Expression
             var stringBuilder3 = new StringBuilder();
             stringBuilder3.Append("<tr>");
-            stringBuilder3.Append("<td nowrap=\"nowrap\"><b>Cron Expression</b></td>");
+            stringBuilder3.Append("<td nowrap=\"nowrap\"><b>Day</b></td>");
             stringBuilder3.Append("<td class='scVersionNumber'>");
             DeleteBorder.Controls.Add(new LiteralControl(stringBuilder3.ToString()));
-            var text2 = new Edit
+            //Days
+            var selectedDays = new ListBox
             {
-                Value = cronExpression.Length > 0 ? cronExpression : string.Empty,
-                ID = "CronExpression",
-                Width = new Unit(100.0, UnitType.Percentage)
+                ID = "selectedDays",
+                Items = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" },
+                SelectedValue = currentDay.IsEmpty() ? "Monday" : currentDay
             };
-            DeleteBorder.Controls.Add(text2);
+            DeleteBorder.Controls.Add(selectedDays);
             DeleteBorder.Controls.Add(new LiteralControl("</td></tr>"));
+            //Days
 
+            //Frequency
             var stringBuilder4 = new StringBuilder();
             stringBuilder4.Append("<tr>");
-            stringBuilder4.AppendFormat("<td class='scPublishable'><button id=\"{0}\" class=\"scButton scButtonPrimary\"" + "onclick=\"javacript:return scForm.postEvent(this, event)\"" + "onkeydown=\"javascript: scForm.handleKey(this, event, null, '32')\">" + "Save" + "</button></td", itemId);
-            stringBuilder4.Append("</tr>");
+            stringBuilder4.Append("<td nowrap=\"nowrap\"><b>Frequency</b></td>");
+            stringBuilder4.Append("<td class='scVersionNumber'>");
             DeleteBorder.Controls.Add(new LiteralControl(stringBuilder4.ToString()));
+
+            var selectedFrequency = new ListBox
+            {
+                ID = "selectedFrequency",
+                Items = { "Daily", "Weekly", "Monthly" },
+                SelectedValue = currentFrequency.IsEmpty() ? "Weekly" : currentFrequency
+            };
+
+            DeleteBorder.Controls.Add(selectedFrequency);
+            DeleteBorder.Controls.Add(new LiteralControl("</td></tr>"));
+            //Frequency
 
             DeleteBorder.Controls.Add(new LiteralControl("</table>"));
         }
 
-        protected void OnSave(EventArgs args, string source)
+        protected override void OnOK(object sender, EventArgs args)
         {
             Assert.ArgumentNotNull((object)args, nameof(args));
             var database = Factory.GetDatabase("master");
 
-            var item = database.GetItem(new ID(source));
+            var item = database.GetItem("/sitecore/system/Modules/Historic Data Log/Delete Config/Delete History");
 
             var daysNum = StringUtil.GetString(Context.ClientPage.ClientRequest.Form["daysNum"]);
-            var cronExpresession = StringUtil.GetString(Context.ClientPage.ClientRequest.Form["CronExpression"]);
+            var day = StringUtil.GetString(Context.ClientPage.ClientRequest.Form["selectedDays"]);
+            var frequency = StringUtil.GetString(Context.ClientPage.ClientRequest.Form["selectedFrequency"]);
 
             using (new SecurityDisabler())
             {
                 item.Editing.BeginEdit();
                 item.Fields["Number of days"].Value = daysNum;
-                item.Fields["Cron Expression"].Value = cronExpresession;
+                item.Fields["Day"].Value = day;
+                item.Fields["Frequency"].Value = frequency;
                 item.Editing.EndEdit();
             }
 
-            this.RenderDeleteConfig();
+            var i = new DeletionBatch();
+            i.HangfireBatch(daysNum, day, frequency);
+
+            base.OnOK(sender, args);
         }
     }
 }
