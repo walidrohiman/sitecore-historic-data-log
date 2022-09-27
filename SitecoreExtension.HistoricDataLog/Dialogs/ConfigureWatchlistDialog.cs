@@ -8,7 +8,6 @@ using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
-using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
 using Border = Sitecore.Web.UI.HtmlControls.Border;
@@ -18,7 +17,6 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
     public class ConfigureWatchlistDialog : DialogForm
     {
         protected Border Watchlists;
-        protected Button DeleteBtn;
 
         public ChildList ConfiguredItems { get; set; }
 

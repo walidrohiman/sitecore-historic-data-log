@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xamlControls
+  xmlns:x="http://www.sitecore.net/xaml"
+  xmlns:ajax="http://www.sitecore.net/ajax"
+  xmlns:rest="http://www.sitecore.net/rest"
+  xmlns:javascript="http://www.sitecore.net/javascript"
+  xmlns:r="http://www.sitecore.net/renderings"
+  xmlns:xmlcontrol="http://www.sitecore.net/xmlcontrols"
+  xmlns:p="http://schemas.sitecore.net/Visual-Studio-Intellisense"
+  xmlns:asp="http://www.sitecore.net/microsoft/webcontrols"
+  xmlns:html="http://www.sitecore.net/microsoft/htmlcontrols"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <Sitecore.Shell.Client.Modules.HistoricLog x:inherits="SitecoreExtension.HistoricDataLog.Control.HistoricLogPage,SitecoreExtension.HistoricDataLog">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <Favicon Src="/sitecore/images/favicon.ico" runat="server" />
+    <Sitecore.Controls.HtmlPage runat="server" Title="Historic Log">
+      <x:register assembly="ComponentArt.Web.UI" namespace="ComponentArt.Web.UI"/>
+      <x:register assembly="Sitecore.Kernel" namespace="Sitecore.Web.UI.WebControls.Ribbons"/>
+
+      <Stylesheet Src="Content Manager.css" DeviceDependant="true" runat="server" />
+      <Stylesheet Src="Ribbon.css" DeviceDependant="true" runat="server" />
+      <Stylesheet Src="Grid.css" DeviceDependant="true" runat="server" />
+      <Stylesheet Src="Dialogs.css" DeviceDependant="true" runat="server" />
+      <Stylesheet Src="/sitecore/shell/client/Modules/HistoricLog/HistoricLog.css" runat="server" />
+
+      <Script Src="/sitecore/shell/Controls/Lib/jQuery/jquery.noconflict.js" runat="server" />
+      <Script Src="/sitecore/shell/Controls/Lib/jQuery/tablesorter.js" runat="server" />
+      <Script Src="/sitecore/shell/Controls/Lib/jQuery/jquery.tablesorter.extras-0.1.22.js" runat="server" />
+      <Script Src="/sitecore/shell/Controls/Lib/jQuery/tablesorter.scrollable.js" runat="server" />
+
+      <Script Src="/sitecore/shell/Applications/Content Manager/Content Editor.js" runat="server" />
+      <Script Src="/sitecore/shell/client/Modules/HistoricLog/HistoricLog.js" runat="server" />
+
+      <AjaxScriptManager runat="server"/>
+      <ContinuationManager runat="server" />
+
+      <Border class="scStretch" runat="server">
+        <Border ID="RibbonContainer" runat="server">
+          <Ribbon ID="Ribbon" runat="server" />
+        </Border>
+        <div id="contentWrapper" class="scDialogContentContainer wrapperHeight">
+          <Border ID="GridContainer" runat="server" Background="White">
+            <Grid id="Items"
+              AutoFocusSearchBox="false"
+              RunningMode="Callback"
+              CssClass="Grid"
+              ShowHeader="true"
+              HeaderCssClass="GridHeader"
+            
+              FooterCssClass="GridFooter"
+                
+              GroupByCssClass="GroupByCell"
+              GroupByTextCssClass="GroupByText"
+              GroupBySortAscendingImageUrl="group_asc.gif"
+              GroupBySortDescendingImageUrl="group_desc.gif"
+              GroupBySortImageWidth="10"
+              GroupBySortImageHeight="10"
+
+              GroupingNotificationTextCssClass="GridHeaderText"
+              GroupingPageSize="5"
+            
+              PageSize="15"
+              PagerStyle="Slider"
+              PagerTextCssClass="GridFooterText"
+              PagerButtonHoverEnabled="True"
+              PagerImagesFolderUrl="/sitecore/shell/themes/standard/componentart/grid/pager/"
+              ShowSearchBox="true"
+              SearchTextCssClass="GridHeaderText scTextAlignRight "
+              SearchBoxCssClass="SearchBox"
+      	    
+              SliderHeight="20"
+              SliderWidth="150"
+              SliderGripWidth="24"
+              SliderPopupOffsetX="20"
+              SliderPopupClientTemplateId="SliderTemplate"
+            
+              TreeLineImagesFolderUrl="/sitecore/shell/themes/standard/componentart/grid/lines/"
+              TreeLineImageWidth="22"
+              TreeLineImageHeight="19"
+            
+              PreExpandOnGroup="false"
+              ImagesBaseUrl="/sitecore/shell/themes/standard/componentart/grid/"
+              IndentCellWidth="22"
+
+              LoadingPanelClientTemplateId="LoadingFeedbackTemplate"
+              LoadingPanelPosition="MiddleCenter"
+            
+              Width="100%" runat="server">
+
+              <Levels>
+                <GridLevel
+				  DataKeyField="Id"
+                  ShowTableHeading="false"
+                  ShowSelectorCells="false"
+                  RowCssClass="Row"
+                  ColumnReorderIndicatorImageUrl="reorder.gif"
+                  DataCellCssClass="DataCell"
+                  HeadingCellCssClass="HeadingCell"
+                  HeadingCellHoverCssClass="HeadingCellHover"
+                  HeadingCellActiveCssClass="HeadingCellActive"
+                  HeadingRowCssClass="HeadingRow"
+                  HeadingTextCssClass="HeadingCellText"
+                  SelectedRowCssClass="SelectedRow"
+                  GroupHeadingCssClass="GroupHeading"
+                  SortAscendingImageUrl="asc.gif"
+                  SortDescendingImageUrl="desc.gif"
+                  SortImageWidth="13"
+                  SortImageHeight="13" runat="server">
+                  <Columns runat="server">
+					<GridColumn DataField="Id" Visible="false" runat="server"/>	
+					<GridColumn DataField="FieldsInformation" Visible="false" runat="server"/>					
+					<GridColumn DataField="ItemId" AllowGrouping="false" IsSearchable="true" SortedDataCellCssClass="SortedDataCell" HeadingText="ID" runat="server" />
+                    <GridColumn DataField="ItemName" AllowGrouping="false" IsSearchable="true" SortedDataCellCssClass="SortedDataCell" HeadingText="Name" runat="server" />
+                    <GridColumn DataField="ItemPath" AllowGrouping="true" IsSearchable="true" SortedDataCellCssClass="SortedDataCell" HeadingText="Path" runat="server" />
+					<GridColumn DataField="ItemLanguage" AllowGrouping="false" IsSearchable="true" SortedDataCellCssClass="SortedDataCell" HeadingText="Language" runat="server" />
+                    <GridColumn DataField="Created" AllowGrouping="true" IsSearchable="false" SortedDataCellCssClass="SortedDataCell" HeadingText="Modified Date" runat="server" />
+                    <GridColumn DataField="UserName" AllowGrouping="true" IsSearchable="true" SortedDataCellCssClass="SortedDataCell" HeadingText="UserName" runat="server" />
+                  </Columns>
+                </GridLevel>
+              </Levels>
+              <ClientTemplates>
+                <ClientTemplate Id="LoadingFeedbackTemplate" runat="server">
+                  <table cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                      <td style="font-size:10px;">
+                        <Literal Text="Loading..." runat="server" />;
+                      </td>
+                      <td>
+                        <img src="/sitecore/shell/themes/standard/componentart/grid/spinner.gif" width="16" height="16" border="0" />
+                      </td>
+                    </tr>
+                  </table>
+                </ClientTemplate>
+
+                <ClientTemplate Id="SliderTemplate" runat="server">
+                  <div class="SliderPopup">
+                    ## DataItem.PageIndex + 1 ## / ## Items.PageCount ##
+                  </div>
+                </ClientTemplate>
+              </ClientTemplates>
+            </Grid>
+          </Border>
+
+          <input type="hidden" id="selectedVersions" />
+          <Border ID="VersionsGridContainer" Class="hidden versionsGridContainer"  runat="server">
+            <table id="versionsGrid" cellspacing="0" cellpadding="0" class="tablesorter">
+              <thead>
+                <tr>				  
+				   <th class="languageColumn HeadingCell cellSize headerBorder">
+                    <span>
+                      <Literal Text="Field Name" runat="server"/>
+                    </span>
+                  </th>
+                  <th class="versionColumn HeadingCell cellSize headerBorder">
+                    <span>
+                      <Literal Text="Old Value" runat="server"/>
+                    </span>
+                  </th>
+                  <th class="dateColumn HeadingCell cellSize headerBorder">
+                    <span>
+                      <Literal Text="New Value" runat="server" />
+                    </span>
+                  </th>			  
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </Border>
+        </div>
+      </Border>
+
+    </Sitecore.Controls.HtmlPage>
+  </Sitecore.Shell.Client.Modules.HistoricLog>
+
+</xamlControls>

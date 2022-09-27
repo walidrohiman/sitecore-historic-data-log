@@ -12,13 +12,11 @@ using Sitecore;
 using Sitecore.Common;
 using Sitecore.Diagnostics;
 using Sitecore.Extensions;
-using Sitecore.Globalization;
 using Sitecore.Shell.Framework.Commands;
 using Sitecore.Shell.Web;
 using Sitecore.Web;
 using Sitecore.Web.UI.Grids;
 using Sitecore.Web.UI.HtmlControls;
-using Sitecore.Web.UI.Sheer;
 using Sitecore.Web.UI.XamlSharp.Xaml;
 using SitecoreExtension.HistoricDataLog.Model;
 
@@ -109,7 +107,7 @@ namespace SitecoreExtension.HistoricDataLog.Control
 
         private IPageable<HistoricLogEntry> GetHistoricLogEntries()
         {
-            using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Experience"].ConnectionString))
+            using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HistoricLog"].ConnectionString))
             using (var cmd = connection.CreateCommand())
             {
                 connection.Open();

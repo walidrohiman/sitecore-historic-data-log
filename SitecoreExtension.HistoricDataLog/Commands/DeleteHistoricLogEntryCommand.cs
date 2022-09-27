@@ -49,7 +49,7 @@ namespace SitecoreExtension.HistoricDataLog.Commands
                     return;
                 }
 
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Experience"].ConnectionString))
+                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HistoricLog"].ConnectionString))
                 {
                     var removeQuery = $@"DELETE FROM ItemHistory WHERE Id = '{id}'";
 

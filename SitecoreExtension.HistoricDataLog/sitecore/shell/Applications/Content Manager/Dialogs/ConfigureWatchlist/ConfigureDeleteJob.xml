@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense" xmlns:content="http://www.sitecore.net/content">
+  <ConfigureDeleteJob>
+    <FormDialog Icon="Applications/32x32/form_yellow_edit.png" Header="Delete Item" Text="Configure Delete Historic Log Job">
+      <Stylesheet Key="SetBaseTemplates">
+        .scContentControl {
+          height:100%;
+        border:none;
+        }
+        .scContentControlMultilistBox {
+          height:100%;
+        }
+        .scContentControlTreelist {
+        border:none;
+        }
+		.scContentButtons {
+		  padding: 0 0 10px 0;
+		}
+		a.scContentButton {
+		  color: #2694C0;
+		  white-space: nowrap;
+		  display: inline-block;
+		  border-right: 1px solid #ccc;
+		  padding: 0 14px 0 15px;
+		  padding-left: 15px;
+		}
+		.scContentButton:first-child {
+			padding-left: 0;
+		}
+		.scContentButton:last-child {
+		  border-right: 0px;
+		}
+      </Stylesheet>
+	  
+		<CodeBeside Type="SitecoreExtension.HistoricDataLog.Dialogs.ConfigureDeleteJobDialog, SitecoreExtension.HistoricDataLog"/>
+	
+		<Border ID="DeleteBorder" />  
+
+    </FormDialog>
+  </ConfigureDeleteJob>
+</control>

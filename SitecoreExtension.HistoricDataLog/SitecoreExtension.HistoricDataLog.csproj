@@ -50,8 +50,8 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="ComponentArt.Web.UI, Version=2010.1.2637.35, Culture=neutral, PublicKeyToken=9bc9f846553156bb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\inetpub\wwwroot\experimentsc.dev.local\bin\ComponentArt.Web.UI.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\ComponentArt.Web.UI.dll</HintPath>
     </Reference>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
@@ -610,6 +610,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\ConfigureWatchlist\AddWatchlist.xml" />
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\ConfigureWatchlist\ConfigureDeleteJob.xml" />
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\ConfigureWatchlist\ConfigureWatchlist.xml" />
+    <Content Include="sitecore\shell\client\Modules\HistoricLog\HistoricLog.css" />
+    <Content Include="sitecore\shell\client\Modules\HistoricLog\HistoricLog.js" />
+    <Content Include="sitecore\shell\client\Modules\HistoricLog\HistoricLog.xaml.xml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

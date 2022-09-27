@@ -30,4 +30,11 @@ namespace SitecoreExtension.HistoricDataLog.Model
         public string Created { get; set; }
         public string FieldsInformation { get; set; }
     }
+
+    public class NewWatchlistItem
+    {
+        public string ItemName { get; set; }
+        public string ItemPath { get; set; }
+        public string IncludeSubItems { get; set; }
+    }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Hangfire;
 using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
@@ -6,6 +8,7 @@ using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
 using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web.UI.Pages;
+using SitecoreExtension.HistoricDataLog.Model;
 
 namespace SitecoreExtension.HistoricDataLog.Dialogs
 {
@@ -14,7 +17,7 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
         protected TreeList WatchListTree;
         protected Checkbox IncludeSubItems;
 
-        protected Database database = Factory.GetDatabase("master");
+        protected Database Database = Factory.GetDatabase("master");
 
         protected override void OnLoad(EventArgs e)
         {
@@ -31,48 +34,66 @@ namespace SitecoreExtension.HistoricDataLog.Dialogs
             Assert.ArgumentNotNull(sender, nameof(sender));
             Assert.ArgumentNotNull(args, nameof(args));
 
-            var watchlistItem = database.GetItem("/sitecore/system/Modules/Historic Data Log/Watchlists");
-
-            var watchlistTemplate = database.GetTemplate(new ID("{774A9BF1-2540-410F-B796-2BAAEC9342EF}"));
-
-            var withSubitems = false;
+            var withSubitem = false;
 
             var array = WatchListTree.GetValue().Split('|');
 
+            var newWatchlist = new List<NewWatchlistItem>();
+
             foreach (var id in array)
             {
-                var item = database.GetItem(new ID(id));
+                var item = Database.GetItem(new ID(id));
 
                 if (IncludeSubItems.Checked)
                 {
-                    withSubitems = true;
+                    withSubitem = true;
 
                     if (!item.HasChildren)
                     {
-                        withSubitems = false;
+                        withSubitem = false;
                     }
                 }
 
-                if (watchlistTemplate != null)
+                var watchlistItem = new NewWatchlistItem
                 {
-                    using (new SecurityDisabler())
-                    {
-                        var newItem = watchlistItem?.Add(item.Name, watchlistTemplate);
+                    ItemName = item.Name + "-" + item.ID.Guid.ToString().Replace("-", ""),
+                    ItemPath = item.Paths.FullPath,
+                    IncludeSubItems = withSubitem ? "1" : "0"
+                };
 
-                        if (newItem == null)
-                        {
-                            continue;
-                        }
-
-                        newItem.Editing.BeginEdit();
-                        newItem.Fields["Watchlist Path"].Value = item.Paths.FullPath;
-                        newItem.Fields["Include subitems"].Value = withSubitems ? "1" : "0";
-                        newItem.Editing.EndEdit();
-                    }
-                }
+                newWatchlist.Add(watchlistItem);
             }
 
+            BackgroundJob.Enqueue(() => SaveNewWatchlistItem(newWatchlist));
+
             base.OnOK(sender, args);
+        }
+
+        public void SaveNewWatchlistItem(List<NewWatchlistItem> watchlistItems)
+        {
+            var watchlistItem = Database.GetItem("/sitecore/system/Modules/Historic Data Log/Watchlists");
+
+            var watchlistTemplate = Database.GetTemplate(new ID("{774A9BF1-2540-410F-B796-2BAAEC9342EF}"));
+
+            if (watchlistTemplate == null) return;
+
+            foreach (var item in watchlistItems)
+            {
+                using (new SecurityDisabler())
+                {
+                    var newItem = watchlistItem?.Add(item.ItemName, watchlistTemplate);
+
+                    if (newItem == null)
+                    {
+                        continue;
+                    }
+
+                    newItem.Editing.BeginEdit();
+                    newItem.Fields["Watchlist Path"].Value = item.ItemPath;
+                    newItem.Fields["Include subitems"].Value = item.IncludeSubItems;
+                    newItem.Editing.EndEdit();
+                }
+            }
         }
     }
 }

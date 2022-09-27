@@ -6,7 +6,6 @@ using Dapper;
 using Hangfire;
 using Sitecore.Configuration;
 using Sitecore.Owin.Pipelines.Initialize;
-using Sitecore.Pipelines;
 using Log = Sitecore.Diagnostics.Log;
 
 namespace SitecoreExtension.HistoricDataLog.Batch
@@ -18,11 +17,16 @@ namespace SitecoreExtension.HistoricDataLog.Batch
             var database = Factory.GetDatabase("master");
             var item = database.GetItem("/sitecore/system/Modules/Historic Data Log/Delete Config/Delete History");
 
-            if (item == null) return;
+            var days = "30";
+            var day = "Monday";
+            var frequency = "Weekly";
 
-            var days = item.Fields["Number of days"].Value;
-            var day = item.Fields["Day"].Value;
-            var frequency = item.Fields["Frequency"].Value;
+            if (item != null)
+            {
+                days = item.Fields["Number of days"].Value;
+                day = item.Fields["Day"].Value;
+                frequency = item.Fields["Frequency"].Value;
+            }
 
             HangfireBatch(days, day, frequency);
         }
@@ -38,7 +42,7 @@ namespace SitecoreExtension.HistoricDataLog.Batch
             {
                 int result;
                
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Experience"].ConnectionString))
+                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HistoricLog"].ConnectionString))
                 {
                     var deleteQuery = $@"DELETE FROM ItemHistory
                                         WHERE

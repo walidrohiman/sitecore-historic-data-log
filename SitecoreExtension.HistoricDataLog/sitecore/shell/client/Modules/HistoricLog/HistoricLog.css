@@ -1,0 +1,191 @@
+﻿body
+{
+  overflow: auto;
+  background: transparent;
+}
+
+.sc-globalHeader .col2 
+{
+  vertical-align: baseline;    
+}
+
+.versionsContainer
+{
+  width: 100%;
+  height: 150px;
+  position: absolute;
+  bottom: 33px;
+  background-color: #ebebeb;
+  border-top: 1px solid #B5B4AF;
+  overflow: hidden;
+}
+
+.innerContainer
+{
+  width: 0px;
+  height: 100%;
+}
+
+.scrollbox
+{
+  overflow: auto;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.hidden
+{
+  display: none;
+}
+
+.versionItem
+{
+  white-space: nowrap;
+  display: block;
+}
+
+.selectVersion
+{
+  font-weight: 600;
+  margin-top: 2px;
+  margin-left: 2px;
+}
+
+.versionsGridContainer {
+    min-height: 250px;
+    padding-top: 20px;
+    margin-right: 4px;
+}
+
+.tablesorter
+{
+  border: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.tablesorter th
+{
+  border-bottom: 1px solid #cfcfcf;
+  border-top: 1px solid #666666;
+  text-align: center;
+  cursor: pointer;
+}
+.tablesorter td
+{
+  border-bottom:1px solid #EAE9E1;
+}
+
+.tablesorter th,.tablesorter td
+{
+  padding:3px 4px 2px 4px;
+}
+
+.tablesorter th.header span
+{
+  background-color: transparent;
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: right center;
+  padding-right: 14px;
+  display: inline-block;
+}
+
+.tablesorter th.headerSortUp span
+{
+  background-image: url('/sitecore/shell/themes/standard/componentart/grid/asc.gif');
+}
+
+.tablesorter th.headerSortDown span
+{
+  background-image: url('/sitecore/shell/themes/standard/componentart/grid/desc.gif');
+}
+
+.tablesorter .selected td
+{
+  background-color: #D0EBF6;
+        border: 1px solid #ccc;
+        border-top: none;
+        padding: 5px;
+}
+
+.tablesorter .languageColumn, .tablesorter .versionColumn, .tablesorter .dateColumn, .tablesorter .byColumn
+{
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+#GridContainer {
+}
+.scGridFooter {
+    position: relative;   
+}
+
+.scGridFooter div {
+    position: relative !important;
+}
+
+.scGridFooter div img{
+    top: 0 !important;
+}
+
+.Grid {
+    height: 530px !important;
+}
+
+.Row {
+    background-color: #FFFFFF;
+    height: 24px;
+}
+
+    .Row:nth-child(odd) {
+        background-color: #f7f7f7;
+    }
+
+
+    .Row:hover {
+        background: #e3e3e3;
+    }
+
+    .Row td.DataCell {
+        cursor: default;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+    .Grid, .Row *, .SelectedRow *, .HeadingRow * {
+        width: auto !important;
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .GridFooter {
+        cursor: default;
+        padding: 5px 5px 0px;
+        height: 30px; /* User manager footer*/
+    }
+
+    .cellSize {
+        height: 37px;
+        width: 173px;
+    }
+
+    .headerBorder {
+        border: none !important;
+    }
+
+    .centerTable {
+        margin-left:auto;
+        margin-right: auto;
+    }
+
+    .scRibbonToolbarLargeButton {
+        padding-bottom: 2px !important;
+    }
+
+    .wrapperHeight {
+        height: calc(100% - 80px);
+        overflow: auto;
+    }

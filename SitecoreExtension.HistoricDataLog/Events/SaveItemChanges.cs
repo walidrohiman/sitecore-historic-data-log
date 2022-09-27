@@ -41,7 +41,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
 
             var listChanges = itemChange.FieldChanges;
 
-            List<FieldsInformation> fieldsInformation = new List<FieldsInformation>();
+            var fieldsInformation = new List<FieldsInformation>();
 
             foreach (FieldChange listChange in listChanges)
             {
@@ -90,7 +90,7 @@ namespace SitecoreExtension.HistoricDataLog.Events
                 var userName = itemInfo.UserName;
                 var creationDate = $"CAST('{DateTime.Now}' as DATETIME)";
 
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Experience"].ConnectionString))
+                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["HistoricLog"].ConnectionString))
                 {
                     var insertQuery = $@"INSERT INTO ItemHistory
                                             (
